@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Search Results</h1>
+    <div class="row">
+      <div class="col-md-8">
+        <div id="results-container">
+          {% include 'results_content.html' %}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <form id="cluster-form">
+          {% for i in range(1, 5) %}
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cluster-{{ i }}" name="selected_clusters" value="Cluster {{ i }}">
+              <label class="form-check-label" for="cluster-{{ i }}">Cluster {{ i }}</label>
+            </div>
+          {% endfor %}
+        </form>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <button id="next-button" class="btn btn-primary">Next</button>
+        <button id="exit-button" class="btn btn-secondary">Exit</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function() {
+      function loadData() {
+        $.getJSON('static/new_papers.json', function(papersData) {
+          $.getJSON('static/new_clusters.json', function(clustersData) {
+            $('#next-button').off('click').on('click', function() {
+              var selectedClusters = [];
+              $('input[name="selected_clusters"]:checked').each(function() {
+                var clusterName = $(this).val();
+              if (clustersData.hasOwnProperty(clusterName)) {
+                selectedClusters.push(clusterName);
+              }
+              });
+
+              var selectedPapers = [];
+              var clusterDescriptions = [];
+              selectedClusters.forEach(function(clusterName) {
+                var clusterInfo = clustersData[clusterName];
+                if (clusterInfo) {
+                  clusterDescriptions.push(clusterInfo.description);
+                  clusterInfo.paper_numbers.forEach(function(paperNumber) {
+                    selectedPapers.push(papersData[paperNumber - 1]);
+                  });
+                }
+              });
+
+              var data = {
+                clusterDescriptions: clusterDescriptions,
+                papers: selectedPapers
+              };
+
+              $.ajax({
+                type: 'POST',
+                url: '/next',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                  // Update the results container with the response
+                  $('#results-container').html(response);
+                  // Load the updated data
+                  loadData();
+                }
+              });
+            });
+          });
+        });
+      }
+
+      // Initial load of data
+      loadData();
+
+      $('#exit-button').click(function() {
+        // Perform any necessary actions before exiting
+        window.location.href = '/';
+      });
+    });
+  </script>
+{% endblock %}

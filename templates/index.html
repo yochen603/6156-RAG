@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="d-flex justify-content-center align-items-center mt-5">
+    <div class="text-center">
+      <h1>Paper Search App</h1>
+      <form id="search-form" method="POST" >
+        <div class="form-group">
+          <input type="text" class="form-control" id="query" name="query" placeholder="Enter your query" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function() {
+      $('#search-form').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+          type: 'POST',
+          url: '/results/0',
+          data: formData,
+          beforeSend: function() {
+            // Show loading spinner
+            $('#loading-spinner').show();
+          },
+          success: function(response) {
+            // Hide loading spinner
+            $('#loading-spinner').hide();
+            // Render the results page
+            $('body').html(response);
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}

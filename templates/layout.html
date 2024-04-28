@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    <title>Scholar Paper Search</title>
+  </head>
+  <body>
+    <div class="container-fluid n-bar">
+      <div class="row">
+        <div class="col-md-4 n-item">
+          <a href="index" class="n-color" id="n-home">
+            Home
+          </a>
+        </div>
+        <div class="col-md-4 n-item">
+          <a href="index" class="n-color" id="n-results">
+            Search
+          </a>
+        </div>
+        <div class="col-md-4 n-item">
+          <a href="{{ url_for('history') }}" class="n-color" id="n-history">
+            Outcome
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="loading-spinner" style="display: none;">
+        <div class="text-center mt-5">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <p>Loading results...</p>
+        </div>
+      </div>
+
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {% block scripts %}
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Selected Papers</h1>
+  <div class="row">
+    {% for paper in papers %}
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{{ paper.link }}" target="_blank">{{ paper.title }}</a>
+          </h5>
+          <p class="card-text">
+            {{ ' '.join(paper.abstract.split()[:30]) }}
+            {% if paper.abstract.split()|length > 30 %}
+              ...
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

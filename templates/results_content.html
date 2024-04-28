@@ -1,0 +1,19 @@
+{% if papers %}
+  {% for cluster_name, cluster_info in clusters.items() %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ cluster_name }}: {{ cluster_info['description'] }}</h5>
+        <ul>
+          {% for paper_number in cluster_info['paper_numbers'] %}
+            {% if paper_number <= papers|length %}
+              {% set paper = papers[paper_number - 1] %}
+              <li><a href="{{ paper['link'] }}" target="_blank">{{ paper['title'] }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No papers found.</p>
+{% endif %}
